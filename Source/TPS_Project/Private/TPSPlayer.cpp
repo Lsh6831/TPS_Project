@@ -79,6 +79,7 @@ void ATPSPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		PlayerInput->BindAction(ia_LooUP,ETriggerEvent::Triggered,this,&ATPSPlayer::LookUP);
 		PlayerInput->BindAction(ia_Turn,ETriggerEvent::Triggered,this,&ATPSPlayer::Turn);
 		PlayerInput->BindAction(ia_Move,ETriggerEvent::Triggered,this,&ATPSPlayer::Move);
+		PlayerInput->BindAction(ia_Jump,ETriggerEvent::Triggered,this,&ATPSPlayer::InputJump);
 	}
 }
 
@@ -106,4 +107,9 @@ void ATPSPlayer::Move(const FInputActionValue& inputValue)
 	FVector2D value = inputValue.Get<FVector2D>(); //전달 받는 2D 값
 	direction.X=value.X;//전후
 	direction.Y=value.Y;//좌우
+}
+
+void ATPSPlayer::InputJump(const FInputActionValue& inputValue)
+{
+	Jump();//ACharacter 클래스가 제공하는 기본 점프 함수 호출
 }
