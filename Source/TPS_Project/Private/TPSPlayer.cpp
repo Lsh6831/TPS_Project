@@ -53,9 +53,24 @@ void ATPSPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	// 플레이어 이동 처리
-	// P결과 위치 = P0초기위치 +V속도*t시간
-	direction = FTransform(GetControlRotation()).TransformFVector4(direction); //자기를 기준으로 백턴 변환
+	// 캐릭터 이동처리에서 버그예시)
+	// GetControlRotaion() 함수는 좌우(YAW) 말고도 상하(PITCH) 까지 포함된 카메라 전체 회전
+	// PITCH 움직임에 X축을 기울이는 성질이 있어서 카메라가 아래를 향하는 상태에서 W를 누르면
+	// "앞으로 가는 입력" + "아래로 박는 입력"으로 섞임 -> 이때 수평 속도가 cos(Pitch)로줄어듬
+	
+	// 컨트롤러의 현재 회전 값들 (YAW,PITCH,ROLL) 값을 가져옴
+	FRotator controlRot = GetControlRotation();
+	// PITCH 자체를 0으로 - 기우는 현상 차단
+	controlRot.Pitch = 0.0f;
+	// ROLL 도 0으로 고정 - 기우는 현상 차단
+	controlRot.Roll = 0.0f;
+	
+	// YAW좌우 속값만 남은 백터를 넣어둠 -> 카메라가 어디를 보던지 , 이동은 수평면 위에서만 이루어지도록 함
+	direction=FRotationMatrix(controlRot).TransformVector(direction);
+	
+	// // 플레이어 이동 처리
+	// // P결과 위치 = P0초기위치 +V속도*t시간
+	// direction = FTransform(GetControlRotation()).TransformFVector4(direction); //자기를 기준으로 백턴 변환
 	// FVector P0 =GetActorLocation();
 	// FVector vt =direction*walkSpeed*DeltaTime;
 	// FVector P =P0+vt;
