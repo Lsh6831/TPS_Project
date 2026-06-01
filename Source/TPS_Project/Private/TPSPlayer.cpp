@@ -3,7 +3,9 @@
 
 #include "TPS_Project/Public/TPSPlayer.h"
 
+#include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -18,6 +20,8 @@ ATPSPlayer::ATPSPlayer()
 	springArmComp->SetRelativeLocation(FVector(.0f,70.0f,90.0f)); // 암 컴포넌트의시작점
 	springArmComp->TargetArmLength=400.0f;
 	
+	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	cameraComp->SetupAttachment(springArmComp);
 }
 
 // Called when the game starts or when spawned
