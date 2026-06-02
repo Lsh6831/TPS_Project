@@ -60,7 +60,7 @@ void ABullet::BeginPlay()
 
 // Called every frame
 void ABullet::Tick(float DeltaTime)
-{
+{	
 	Super::Tick(DeltaTime);
 }
 
