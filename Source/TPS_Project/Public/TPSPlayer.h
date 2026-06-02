@@ -54,7 +54,6 @@ public:
 	class UInputAction* ia_Turn;
 	
 	// 전후좌우 이동 IA 필드 선언
-	
 	UPROPERTY(EditDefaultsOnly,Category="Input")
 	class UInputAction* ia_Move;
 	
@@ -74,8 +73,19 @@ public:
 	UPROPERTY(EditDefaultsOnly,Category="Input")
 	class UInputAction* ia_SniperGun;
 	
+	// 스나이퍼 줌 IA 필드 선언
+	UPROPERTY(EditDefaultsOnly,Category="Input")
+	class UInputAction* ia_SniperZoom;
+	
 	// 현재 유탄총을 사용중인지 여부(true = 유탄 / false = 스나이퍼)
 	bool bUsingGrenadeGun =true;
+	
+	//현재 스나이퍼 줌(조준) 중인지 여부(FOV wna+UI 표시되는 상태)
+	bool bSniperZoom =false;
+	
+	// 런타임에 생성될 UI 인스턴스(GC 보호용 빈 UPROPERTY)
+	UPROPERTY()
+	class UUserWidget* sniperUI;
 	
 	// 이동 속도
 	UPROPERTY(EditDefaultsOnly,Category=PlayerSetting)
@@ -84,6 +94,12 @@ public:
 	// 총알 스폰 팩토리
 	UPROPERTY(EditDefaultsOnly,Category=BulletFactory)
 	TSubclassOf<class ABullet> bulletFactory;
+	
+	// 스나이퍼 줌 UI 위젯 팩토리 (WBP_SniperUI를 에디터에서 할당 필요)
+	
+	UPROPERTY(EditDefaultsOnly,Category=SniperUI)
+	TSubclassOf<class UUserWidget> sniperUIFactory;
+	
 	
 	// 이동 방향
 	FVector direction;
@@ -109,4 +125,6 @@ public:
 	// 스나이퍼건으로 교체 입력 함수 선언
 	void ChangeToSniperGun(const struct FInputActionValue& inputValue);
 	
+	// 스나이퍼 줌 입력 함수 tjsdjs
+	void SniperZoom();
 };

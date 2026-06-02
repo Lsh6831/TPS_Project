@@ -12,6 +12,8 @@
 
 #include <iostream>
 
+#include "Blueprint/UserWidget.h"
+
 
 // Sets default values
 ATPSPlayer::ATPSPlayer()
@@ -48,7 +50,7 @@ ATPSPlayer::ATPSPlayer()
 	}
 	// 스나이퍼건 스태틱 메시 컴포넌트 등록
 	sniperGunComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SniperGUn StatickMeshComponent"));
-	gunMeshComp->SetupAttachment(GetMesh());
+	sniperGunComp->SetupAttachment(GetMesh());
 	ConstructorHelpers::FObjectFinder<UStaticMesh> TempSniperGunMesh(TEXT("/Script/Engine.StaticMesh'/Game/Weapons/Sniper/Meshes/sniper1.sniper1'"));
 	
 	if (TempSniperGunMesh.Succeeded())
@@ -80,6 +82,8 @@ void ATPSPlayer::BeginPlay()
 			subsystem->AddMappingContext(Imc_TPS,0);
 		}
 	}
+	// 스나이퍼 UI 위젯 인스턴스 생성 (화면에 보이기 위해서는 AddToViewport() 호출 시 등장)
+	sniperUI = CreateWidget(GetWorld(),sniperUIFactory);
 }
 
 // Called every frame
@@ -132,6 +136,7 @@ void ATPSPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		PlayerInput->BindAction(ia_Fire,ETriggerEvent::Started,this,&ATPSPlayer::InputFire);
 		PlayerInput->BindAction(ia_GranadeGun,ETriggerEvent::Started,this,&ATPSPlayer::ChangeToGrenadeGun);
 		PlayerInput->BindAction(ia_SniperGun,ETriggerEvent::Started,this,&ATPSPlayer::ChangeToSniperGun);
+		PlayerInput->BindAction(ia_SniperZoom,ETriggerEvent::Completed,this,&ATPSPlayer::SniperZoom);
 	}
 }
 
@@ -191,4 +196,29 @@ void ATPSPlayer::ChangeToSniperGun(const FInputActionValue& inputValue)
 	//	스나이퍼 숨기고 / 유탄총 보이게
 	gunMeshComp->SetVisibility(false);
 	sniperGunComp->SetVisibility(true);
+}
+
+void ATPSPlayer::SniperZoom()
+{
+	// 스나이퍼 총이 아닐 때는 동작하면 않음
+	if (bUsingGrenadeGun)
+	{
+		return;
+	}
+	if (bSniperZoom==false)
+	{
+		// 키 누름 - 줌 모드에 진입
+		bSniperZoom=true;
+		sniperUI->AddToViewport();// 조준경 Ui 화면에 나타남
+		cameraComp->SetFieldOfView(45.f); // FOV 시야각을 줌해서 줌인 효과
+		
+	}
+	else
+	{
+		// 키를 해제 - 줌 모드에서 해제
+		bSniperZoom=false;
+		sniperUI->RemoveFromParent();// 조준경 UI 제거
+		cameraComp->SetFieldOfView(90.f);
+	}
+	
 }
