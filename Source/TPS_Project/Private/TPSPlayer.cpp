@@ -59,6 +59,11 @@ ATPSPlayer::ATPSPlayer()
 		
 		sniperGunComp->SetRelativeScale3D(FVector(0.8f));
 	}
+	
+	// 시작 시 기본 무기로 스나이퍼건을(유탄총을 숨김)
+	bUsingGrenadeGun=false;
+	sniperGunComp->SetVisibility(true);
+	gunMeshComp->SetVisibility(true);
 }
 // Called when the game starts or when spawned
 void ATPSPlayer::BeginPlay()
@@ -125,6 +130,8 @@ void ATPSPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		PlayerInput->BindAction(ia_Move,ETriggerEvent::Triggered,this,&ATPSPlayer::Move);
 		PlayerInput->BindAction(ia_Jump,ETriggerEvent::Started,this,&ATPSPlayer::InputJump);
 		PlayerInput->BindAction(ia_Fire,ETriggerEvent::Started,this,&ATPSPlayer::InputFire);
+		PlayerInput->BindAction(ia_GranadeGun,ETriggerEvent::Started,this,&ATPSPlayer::ChangeToGrenadeGun);
+		PlayerInput->BindAction(ia_SniperGun,ETriggerEvent::Started,this,&ATPSPlayer::ChangeToSniperGun);
 	}
 }
 
@@ -167,4 +174,21 @@ void ATPSPlayer::InputFire(const FInputActionValue& inputValue)
 	GetWorld()->SpawnActor<ABullet>(bulletFactory,firePosiotion);
 
 	
+}
+void ATPSPlayer::ChangeToGrenadeGun(const FInputActionValue& inputValue)
+{
+	// 사용 중 플래그를 유탄총으로 변경
+	bUsingGrenadeGun=true;
+	//	스나이퍼 숨기고 / 유탄총 보이게
+	sniperGunComp->SetVisibility(false);
+	gunMeshComp->SetVisibility(true);
+}
+
+void ATPSPlayer::ChangeToSniperGun(const FInputActionValue& inputValue)
+{
+	// 사용 중 플래그를 유탄총으로 변경
+	bUsingGrenadeGun=false;
+	//	스나이퍼 숨기고 / 유탄총 보이게
+	gunMeshComp->SetVisibility(false);
+	sniperGunComp->SetVisibility(true);
 }
