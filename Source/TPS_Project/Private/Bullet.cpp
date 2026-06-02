@@ -43,7 +43,8 @@ ABullet::ABullet()
 	movementComp->bShouldBounce=true;
 	// 반동 값(탄성 0~1)
 	movementComp->Bounciness=0.3f;
-	
+	// // 객체 생명 시간 제어
+	// InitialLifeSpan =2.f;
 	
 }
 
@@ -52,6 +53,9 @@ void ABullet::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// SetTimber(핸들러,대상 객체,호출함수 포인터,시간,반복여부)
+	FTimerHandle deathTimer;
+	GetWorldTimerManager().SetTimer(deathTimer,this,&ABullet::Die,2.f,false);
 }
 
 // Called every frame
@@ -60,3 +64,7 @@ void ABullet::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ABullet::Die()
+{
+	Destroy();
+}

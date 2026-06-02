@@ -10,6 +10,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 
+#include <iostream>
+
 
 // Sets default values
 ATPSPlayer::ATPSPlayer()
@@ -150,4 +152,6 @@ void ATPSPlayer::InputFire(const FInputActionValue& inputValue)
 	FTransform firePosiotion =  gunMeshComp->GetSocketTransform(TEXT("FirePosition"));
 	// 위 위치/회전으로 BulletFactory가 BP_Bullet 인스턴스를 월드에 스폰
 	GetWorld()->SpawnActor<ABullet>(bulletFactory,firePosiotion);
+
+	
 }
