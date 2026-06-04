@@ -116,7 +116,7 @@ public:
 	
 	// 이동 방향
 	FVector direction;
-	
+		
 	// 상하 회전 입력 함수 선언
 	void LookUP(const struct FInputActionValue& inputValue);
 	
