@@ -12,6 +12,7 @@
 
 #include <iostream>
 
+#include "EnemyFSM.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 
@@ -233,6 +234,15 @@ void ATPSPlayer::InputFire(const FInputActionValue& inputValue)
 		
 		//타격 위치에 이팩트 호출
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),bulleteffectFactory,hitResult.ImpactPoint);
+		
+		// 적 피격 처리 -FSM 컴포넌트의 ONDAmagePRocess() 호출
+		auto enemy = hitResult.GetActor()->GetDefaultSubobjectByName(TEXT("FSM"));
+			if (enemy)
+			{
+			
+				auto enemyFSM = Cast<UEnemyFSM>(enemy);
+				enemyFSM->OnDamageProCess();
+			}
 		
 		// 타격 물체에 물리 엔진 적용
 		UPrimitiveComponent* hitComp = hitResult.GetComponent();
