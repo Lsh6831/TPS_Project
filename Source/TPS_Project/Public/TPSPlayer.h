@@ -102,6 +102,18 @@ public:
 	TSubclassOf<class UUserWidget> sniperUIFactory;
 	
 	
+	// 스나이퍼 사격 명중 시 표시할 총알 파편 효과 선언
+	UPROPERTY(EditDefaultsOnly,Category=BulletEffect)
+	class UNiagaraSystem* bulleteffectFactory;
+	
+	// 일반 조준 프로스헤어 UI 위젯 팩토리
+	UPROPERTY(EditDefaultsOnly,Category=SniperUI)
+	class UUserWidget* crosshairUI;
+	
+	
+	UPROPERTY(EditDefaultsOnly,Category=SniperUI)
+	TSubclassOf<class UUserWidget> crosshairUIFactory;
+	
 	// 이동 방향
 	FVector direction;
 	
@@ -129,8 +141,5 @@ public:
 	// 스나이퍼 줌 입력 함수 선언
 	void SniperZoom();
 	
-	// 스나이퍼 사격 명중 시 표시할 총알 파편 효과 선언
-	UPROPERTY(EditDefaultsOnly,Category=BulletEffect)
-	class UNiagaraSystem* bulleteffectFactory;
 	
 };
