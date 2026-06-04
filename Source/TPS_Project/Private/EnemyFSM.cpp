@@ -93,13 +93,45 @@ void UEnemyFSM::MoveState()
 // 공격 상태 - 일정 주기로 공격, 플레이어가 범위 이탈 시 추적으로 전환
 void UEnemyFSM::AttackState()
 {
+	// 시간 누적
+	currentTime += GetWorld()->GetDeltaSeconds();
+	if (currentTime>attackDelayTime)
+	{
+		UE_LOG(LogTemp,Warning,TEXT("Attack!"));
+		currentTime = 0.f;
+	}
 	
+	// 타겟이 공격 범위를 벗어나면 
+	float distance = FVector::Distance(target->GetActorLocation(), me->GetActorLocation());
+	if (distance>attackRange)
+	{
+		mState = EEnemyState::Move;
+	}
 }
 
 //피격 상태 - 잠시 멈춘 후 대기로 복귀
 void UEnemyFSM::DamageState()
 {
-	
+	currentTime+=GetWorld()->GetDeltaSeconds();
+	// 경과 시간이 대기시관을 초과했다면,
+	if (currentTime>damageDelayTime)
+		{
+		mState =EEnemyState::Idle;
+		currentTime = 0.f;
+		}
+}
+
+void UEnemyFSM::OnDamageProCess()
+{
+hp--;
+if(hp>0)
+{
+	mState=EEnemyState::Damage;
+}
+else
+{
+	mState=EEnemyState::Die;
+}
 }
 
 // 죽음 상태 - 사망 처리 (종착 상태, 더이상 전이 없음)
