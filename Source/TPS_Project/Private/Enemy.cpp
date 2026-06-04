@@ -3,6 +3,8 @@
 
 #include "Enemy.h"
 
+#include "EnemyFSM.h"
+
 
 // Sets default values
 AEnemy::AEnemy()
@@ -18,6 +20,7 @@ AEnemy::AEnemy()
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0.f,0.f,-88.f),FRotator(0.f,-90.f,0.f));
 	}
 	
+	fsm = CreateDefaultSubobject<UEnemyFSM>(TEXT("FSM"));
 }
 
 // Called when the game starts or when spawned
