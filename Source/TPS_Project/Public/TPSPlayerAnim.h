@@ -21,4 +21,7 @@ public:
 	// 캐릭터의 현재 이동 속도(ABP State Machine 의 전이 조건에서 사용)
 	UPROPERTY(BlueprintReadOnly,Category=PlayerAnim)
 	float speed = 0.f;
+	
+	UPROPERTY(BlueprintReadOnly,Category=PlayerAnim)
+	bool isInAir = false;
 };

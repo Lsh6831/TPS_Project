@@ -4,6 +4,7 @@
 #include "TPSPlayerAnim.h"
 
 #include "TPSPlayer.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // 매 프레임 자동 호출 - Tick 직접 구성만 해도 UE 자체가 호출
 void UTPSPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
@@ -18,7 +19,15 @@ void UTPSPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 	ATPSPlayer* player=Cast<ATPSPlayer>(pawn);
 	if (player)
 	{
+		//스피드 확인
 		speed=player->GetVelocity().Size();
+		
+		// 공중에 떠 있는 상태인지
+		UCharacterMovementComponent* movement = player->GetCharacterMovement();
+		if (movement)
+		{
+			isInAir = movement->IsFalling();
+		}
 	}
 	// [DEBUG]
 	if (GEngine)
