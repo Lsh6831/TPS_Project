@@ -19,8 +19,16 @@ void UTPSPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 	ATPSPlayer* player=Cast<ATPSPlayer>(pawn);
 	if (player)
 	{
-		//스피드 확인
-		speed=player->GetVelocity().Size();
+		
+		// 속도 , 전후 좌우 백터가져오기
+		FVector velocity = player->GetVelocity();
+		FVector forward = player->GetActorForwardVector();
+		FVector right = player->GetActorRightVector();
+		
+		//DotProduct() 로 전후 성분과 좌우 성분을 분리 -> Bledn space 의 8방향 분리
+		speed = FVector::DotProduct(velocity,forward); // 앞=양수, 뒤 = 음수
+		direction = FVector::DotProduct(velocity,right); // 우=양수, 좌 = 은수
+		
 		
 		// 공중에 떠 있는 상태인지
 		UCharacterMovementComponent* movement = player->GetCharacterMovement();
@@ -33,6 +41,7 @@ void UTPSPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1,0.f,FColor::Green,
-			FString::Printf(TEXT("Anim"),speed));
+			FString::Printf(TEXT("Speed : %.1f direction = %.1f isInAir=%s"),
+				speed,direction,isInAir? TEXT("true") : TEXT("false")));
 	}
 }
